@@ -33,24 +33,24 @@
 (defn pid
   ([state]
    (-> state
-       (assoc :integrator 0 :derivator 0 :last-time-ms 0 :last-value 0)
+       (assoc :error-sum 0 :last-input 0 :last-time-ms 0 :last-value 0)
        (set-tunings (:kp state) (:ki state) (:kd state))))
   ([state time-ms value]
    (if (>= (- time-ms (:last-time-ms state)) (:period-ms state))
-     (let [{:keys [set-point kp kd ki integrator derivator bounds]} state
+     (let [{:keys [set-point kp kd ki error-sum last-input bounds]} state
            [in-min in-max out-min out-max] bounds
            value (scale (clamp value in-min in-max) in-min in-max -1.0 1.0)
            sp (scale (clamp set-point in-min in-max) in-min in-max -1.0 1.0)
            error (- sp value)
            p-val (* kp error)
-           d-val (* kd (- error derivator))
-           integrator (clamp (+ integrator error) -1.0 1.0)
-           i-val (* integrator ki)
+           d-val (* kd (- last-input value))
+           error-sum (clamp (+ error-sum error) -1.0 1.0)
+           i-val (* error-sum ki)
            pid (scale (clamp (+ p-val i-val d-val) -1.0 1.0)
                       -1.0 1.0 out-min out-max)]
        [(assoc state
-               :integrator integrator
-               :derivator error
+               :error-sum error-sum
+               :last-input value
                :last-time-ms time-ms
                :last-value pid)
         pid])
