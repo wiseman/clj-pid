@@ -15,7 +15,9 @@
            goal 0
            n 0]
       (when (< n 300)
-        (let [pid (assoc pid :set-point goal)
+        (let [pid (if (= n 150)
+                    (pid/set-tunings pid 2 1/5 1/2)
+                    (assoc pid :set-point goal))
               [pid v] (pid/pid pid (* n 100) current)
               new-current (+ current v)]
           (println n new-current v)
