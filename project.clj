@@ -5,4 +5,6 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :deploy-repositories [["releases" :clojars]]
   :source-paths ["src/cljc"]
-  :dependencies [[org.clojure/clojure "1.8.0"]])
+  :dependencies [[org.clojure/clojure "1.8.0"]]
+  :profiles {:dev {:plugins [[lein-cloverage "1.0.2"]
+                             [lein-codox "0.9.4"]]}})
