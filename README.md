@@ -7,7 +7,8 @@ additional features based on the blog posts at
 http://brettbeauregard.com/blog/tag/beginners-pid/:
 
 * Handles sampling time/period. Tuning parameters are specified in
-  terms of / 1 second and are scaled to whatever the `:sample-period-ms` is.
+  units of "per second" and are scaled to whatever the
+  `:sample-period-ms` is.
 
 * Avoids "derivative kick" when the setpoint is changed.
 
