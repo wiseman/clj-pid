@@ -7,7 +7,7 @@ additional features based on the blog posts at
 http://brettbeauregard.com/blog/tag/beginners-pid/:
 
 * Handles sampling time/period. Tuning parameters are specified in
-  terms of / 1 second and are scaled to whatever the `:period-ms` is.
+  terms of / 1 second and are scaled to whatever the `:sample-period-ms` is.
 
 * Avoids "derivative kick" when the setpoint is changed.
 
@@ -45,7 +45,7 @@ hold position while the wind is trying to blow us around:
         (spit "wind.dat" (string/join "" lines))))))
 ```
 
-From the chart below, you can see the controller basically works
+From the chart below, you can see the controller basically works,
 though the parameters could probably use some tuning:
 
 ![Wind example chart](https://cdn.rawgit.com/wiseman/clj-pid/master/wind-example.svg?raw=true)
