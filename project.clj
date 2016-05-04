@@ -1,4 +1,4 @@
-(defproject com.lemondronor/pid "3.0.2-SNAPSHOT"
+(defproject com.lemondronor/pid "3.0.2"
   :description "PID controller in Clojure. Code for writing PID control loops."
   :url "http://github.com/wiseman/clj-pid"
   :license {:name "Eclipse Public License"
