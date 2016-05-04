@@ -1,5 +1,7 @@
 # pid
 
+[![Build Status](https://travis-ci.org/wiseman/clj-pid.png?branch=master)](https://travis-ci.org/wiseman/clj-pid) [![Coverage Status](https://coveralls.io/repos/wiseman/clj-pid/badge.png?branch=master)](https://coveralls.io/r/wiseman/clj-pid?branch=master)
+
 A Clojure/Clojurescript library for PID controllers. I've added some
 additional features based on the blog posts at
 http://brettbeauregard.com/blog/tag/beginners-pid/:
