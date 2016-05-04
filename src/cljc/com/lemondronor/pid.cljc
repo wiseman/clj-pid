@@ -33,10 +33,11 @@
 (defn pid
   ([state]
    (-> state
-       (assoc :i-term 0 :last-input 0 :last-time-ms 0 :last-value 0)
+       (assoc :i-term 0 :last-input 0 :last-time-ms nil :last-value 0)
        (set-tunings (:kp state) (:ki state) (:kd state))))
   ([state time-ms value]
-   (if (>= (- time-ms (:last-time-ms state)) (:period-ms state))
+   (if (or (nil? (:last-time-ms state))
+           (>= (- time-ms (:last-time-ms state)) (:period-ms state)))
      (let [{:keys [set-point kp kd ki i-term last-input bounds]} state
            [in-min in-max out-min out-max] bounds
            value (scale (clamp value in-min in-max) in-min in-max -1.0 1.0)
