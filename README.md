@@ -34,7 +34,7 @@ hold position while the wind is trying to blow us around:
                           :kd 0.4
                           :set-point 30
                           :bounds [-180 180 -1 1]
-                          :period-ms 100})]
+                          :sample-period-ms 100})]
   (let [pos (+ pos wind)
         [controller output] (pid/pid controller time pos)
         pos (+ pos (* 10 output))
@@ -52,7 +52,7 @@ though the parameters could probably use some tuning:
 
 ## License
 
-Copyright © 2016 FIXME
+Copyright © 2016 John Wiseman jjwiseman@gmail.com
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
