@@ -1,10 +1,48 @@
 # pid
 
-A Clojure library designed to ... well, that part is up to you.
+A Clojure/Clojurescript library for PID controllers. I've added some
+additional features based on the blog posts at
+http://brettbeauregard.com/blog/tag/beginners-pid/:
+
+* Handles sampling time/period. Tuning parameters are specified in
+  terms of / 1 second and are scaled to whatever the `:period-ms` is.
+
+* Avoids "derivative kick" when the setpoint is changed.
+
+* Output remains smooth when tuning parameters (Kp, Kd, Ki) are
+  changed on the fly.
+
 
 ## Usage
 
-FIXME
+The following example is a simulation of using a PID controller to
+hold position while the wind is trying to blow us around:
+
+```
+(require '[com.lemondronor.pid :as pid])
+(require '[clojure.string :as string])
+
+(loop
+    [lines []
+     time 0
+     wind 0
+     pos 10
+     controller (pid/pid {:kp 12.5
+                          :ki 2
+                          :kd 0.4
+                          :set-point 30
+                          :bounds [-180 180 -1 1]
+                          :period-ms 100})]
+  (let [[controller output] (pid/pid controller time pos)
+        pos (+ pos (* 10 output) (* (rand) wind))
+        line (prn-str (:set-point controller) pos output wind)]
+    (let [controller (assoc controller :set-point (set-point (int (/ time 80))))]
+      (if (< time 15000)
+        (recur (conj lines line) (+ time 100) (+ wind (or nil (- 0.5 (rand)))) pos controller)
+        (spit "wind.dat" (string/join "" lines))))))
+```
+
+![Wind example chart](/wind-example.svg?raw=true)
 
 ## License
 
