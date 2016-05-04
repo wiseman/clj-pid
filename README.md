@@ -42,6 +42,9 @@ hold position while the wind is trying to blow us around:
         (spit "wind.dat" (string/join "" lines))))))
 ```
 
+From the chart below, you can see the controller basically works
+though the parameters could probably use some tuning:
+
 ![Wind example chart](https://cdn.rawgit.com/wiseman/clj-pid/master/wind-example.svg?raw=true)
 
 ## License
