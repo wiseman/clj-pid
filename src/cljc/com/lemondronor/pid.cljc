@@ -1,44 +1,60 @@
 (ns com.lemondronor.pid)
 
 
-(defn scale [x in-min in-max out-min out-max]
+(defn scale
+  "Maps a value `x` from the input domain of [`in-min`, `in-max`] to
+  the output range of [`out-min`, `out-max`]."
+  [x in-min in-max out-min out-max]
   (+ (/ (* (- x in-min) (- out-max out-min)) (- in-max in-min)) out-min))
 
 
-(defn clamp [x min max]
+(defn clamp
+  "Clamps a value `x` to the range [`min`, `max`] such that the return
+  value is always within that range."
+  [x min max]
   (cond
     (> x max) max
     (< x min) min
     :default x))
 
 
-(defn set-tunings
-  [state kp ki kd]
-  (let [period-s (/ (:period-ms state) 1000.0)]
-    (assoc state
+(defn set-coefficients
+  "Sets the Kp, Ki, and Kd coefficients of a PID controller `c`.
+  Coefficients should be specified in units of \"per second\", and
+  will be scaled for the controller's actual sample rate."
+  [c kp ki kd]
+  (let [period-s (/ (:period-ms c) 1000.0)]
+    (assoc c
            :kp kp
            :ki (* ki period-s)
            :kd (/ kd period-s))))
 
 
-(defn set-period
-  [state period]
-  (let [ratio (/ period (:period-ms state))]
-    (assoc state
-           :ki (* (:ki state) ratio)
-           :kd (/ (:kd state) ratio)
-           :period-ms period)))
+(defn set-sample-period
+  "Sets a PID controller `c`'s sample period, in millseconds."
+  [c period-ms]
+  (let [ratio (/ period-ms (:period-ms c))]
+    (assoc c
+           :ki (* (:ki c) ratio)
+           :kd (/ (:kd c) ratio)
+           :period-ms period-ms)))
+
+
+(defn set-sample-rate
+  "Sets a PID controller `c`'s sample rate, in Hz."
+  [c rate]
+  (set-sample-period c (/ 1000.0 rate)))
 
 
 (defn pid
-  ([state]
-   (-> state
+  ([c]
+   (-> c
        (assoc :i-term 0 :last-input 0 :last-time-ms nil :last-value 0)
-       (set-tunings (:kp state) (:ki state) (:kd state))))
-  ([state time-ms value]
-   (if (or (nil? (:last-time-ms state))
-           (>= (- time-ms (:last-time-ms state)) (:period-ms state)))
-     (let [{:keys [set-point kp kd ki i-term last-input bounds]} state
+       (set-coefficients (:kp c) (:ki c) (:kd c))))
+  ([c time-ms value]
+   (if (or (nil? (:last-time-ms c))
+           (>= (- time-ms (:last-time-ms c)) (:period-ms c)))
+     (let [{:keys [set-point kp kd ki i-term last-input bounds]} c
            [in-min in-max out-min out-max] bounds
            value (scale (clamp value in-min in-max) in-min in-max -1.0 1.0)
            sp (scale (clamp set-point in-min in-max) in-min in-max -1.0 1.0)
@@ -49,10 +65,10 @@
            i-val i-term
            pid (scale (clamp (+ p-val i-val d-val) -1.0 1.0)
                       -1.0 1.0 out-min out-max)]
-       [(assoc state
+       [(assoc c
                :i-term i-term
                :last-input value
                :last-time-ms time-ms
                :last-value pid)
         pid])
-     [state (:last-value state)])))
+     [c (:last-value c)])))
