@@ -42,7 +42,7 @@ hold position while the wind is trying to blow us around:
         (spit "wind.dat" (string/join "" lines))))))
 ```
 
-![Wind example chart](/wind-example.svg?raw=true)
+![Wind example chart](https://cdn.rawgit.com/wiseman/clj-pid/master/wind-example.svg?raw=true)
 
 ## License
 
