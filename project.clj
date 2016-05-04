@@ -6,5 +6,5 @@
   :deploy-repositories [["releases" :clojars]]
   :source-paths ["src/cljc"]
   :dependencies [[org.clojure/clojure "1.8.0"]]
-  :profiles {:dev {:plugins [[lein-cloverage "1.0.2"]
+  :profiles {:dev {:plugins [[lein-cloverage "1.0.6"]
                              [lein-codox "0.9.4"]]}})
