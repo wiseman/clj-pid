@@ -30,7 +30,7 @@
            :kd (/ kd sample-period-s))))
 
 
-(defn set-sample-sample-period
+(defn set-sample-period
   "Sets a PID controller `c`'s sample sample-period, in millseconds."
   [c sample-period-ms]
   (let [ratio (/ sample-period-ms (:sample-period-ms c))]
@@ -43,7 +43,7 @@
 (defn set-sample-rate
   "Sets a PID controller `c`'s sample rate, in Hz."
   [c rate]
-  (set-sample-sample-period c (/ 1000.0 rate)))
+  (set-sample-period c (/ 1000.0 rate)))
 
 
 (defn pid
