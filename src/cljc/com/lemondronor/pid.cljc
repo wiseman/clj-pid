@@ -23,27 +23,27 @@
   Coefficients should be specified in units of \"per second\", and
   will be scaled for the controller's actual sample rate."
   [c kp ki kd]
-  (let [period-s (/ (:period-ms c) 1000.0)]
+  (let [sample-period-s (/ (:sample-period-ms c) 1000.0)]
     (assoc c
            :kp kp
-           :ki (* ki period-s)
-           :kd (/ kd period-s))))
+           :ki (* ki sample-period-s)
+           :kd (/ kd sample-period-s))))
 
 
-(defn set-sample-period
-  "Sets a PID controller `c`'s sample period, in millseconds."
-  [c period-ms]
-  (let [ratio (/ period-ms (:period-ms c))]
+(defn set-sample-sample-period
+  "Sets a PID controller `c`'s sample sample-period, in millseconds."
+  [c sample-period-ms]
+  (let [ratio (/ sample-period-ms (:sample-period-ms c))]
     (assoc c
            :ki (* (:ki c) ratio)
            :kd (/ (:kd c) ratio)
-           :period-ms period-ms)))
+           :sample-period-ms sample-period-ms)))
 
 
 (defn set-sample-rate
   "Sets a PID controller `c`'s sample rate, in Hz."
   [c rate]
-  (set-sample-period c (/ 1000.0 rate)))
+  (set-sample-sample-period c (/ 1000.0 rate)))
 
 
 (defn pid
@@ -53,7 +53,7 @@
        (set-coefficients (:kp c) (:ki c) (:kd c))))
   ([c time-ms value]
    (if (or (nil? (:last-time-ms c))
-           (>= (- time-ms (:last-time-ms c)) (:period-ms c)))
+           (>= (- time-ms (:last-time-ms c)) (:sample-period-ms c)))
      (let [{:keys [set-point kp kd ki i-term last-input bounds]} c
            [in-min in-max out-min out-max] bounds
            value (scale (clamp value in-min in-max) in-min in-max -1.0 1.0)
