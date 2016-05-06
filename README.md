@@ -37,7 +37,8 @@ hold position while the wind is trying to blow us around:
                           :bounds [-180 180 -1 1]
                           :sample-period-ms 100})]
   (let [pos (+ pos wind)
-        [controller output] (pid/pid controller time pos)
+        controller (pid/update controller time pos)
+        output (:output controller)
         pos (+ pos (* 10 output))
         line (prn-str (:set-point controller) pos output wind)]
     (let [controller (assoc controller :set-point (set-point (int (/ time 80))))]

@@ -65,13 +65,21 @@
 
 (deftest pid-test
   (testing "basic functionality"
-    (let [controller (pid/pid
-                      {:kp 2
-                       :ki 1/30
-                       :kd 1/2
-                       :set-point 0
-                       :bounds [-180 180 -1 1]
-                       :sample-period-ms 100})
-          current 30
-          goal 0
-          n 0])))
+    (loop [pid (pid/pid
+                {:kp 0.1
+                 :ki 1/30
+                 :kd 1/200
+                 :set-point 0
+                 :bounds [-180 180 -1 1]
+                 :sample-period-ms 1})
+           time 0
+           pos 100
+           prev-pos nil]
+      (when (< time 10)
+        (when prev-pos
+          (is (< pos prev-pos)))
+        (let [pid (pid/update pid time pos)]
+          (recur pid
+                 (inc time)
+                 (+ pos (:output pid))
+                 pos))))))

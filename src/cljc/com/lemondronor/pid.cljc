@@ -50,29 +50,28 @@
   "Creates a PID controller."
   [c]
   (-> c
-      (assoc :i-term 0 :last-input 0 :last-time-ms nil :last-value 0)
+      (assoc :i-term 0 :last-input 0 :last-time-ms nil)
       (set-coefficients (:kp c) (:ki c) (:kd c))))
 
 (defn update
   "Updates a PID controller."
-  [c time-ms value]
+  [c time-ms input]
   (if (or (nil? (:last-time-ms c))
           (>= (- time-ms (:last-time-ms c)) (:sample-period-ms c)))
     (let [{:keys [set-point kp kd ki i-term last-input bounds]} c
           [in-min in-max out-min out-max] bounds
-          value (scale (clamp value in-min in-max) in-min in-max -1.0 1.0)
+          scaled-input (scale (clamp input in-min in-max) in-min in-max -1.0 1.0)
           sp (scale (clamp set-point in-min in-max) in-min in-max -1.0 1.0)
-          error (- sp value)
+          error (- sp scaled-input)
           p-val (* kp error)
-          d-val (* kd (- last-input value))
+          d-val (* kd (- last-input scaled-input))
           i-term (clamp (+ i-term (* ki error)) -1.0 1.0)
           i-val i-term
-          pid (scale (clamp (+ p-val i-val d-val) -1.0 1.0)
-                     -1.0 1.0 out-min out-max)]
-      [(assoc c
-              :i-term i-term
-              :last-input value
-              :last-time-ms time-ms
-              :last-value pid)
-       pid])
-    [c (:last-value c)]))
+          output (scale (clamp (+ p-val i-val d-val) -1.0 1.0)
+                        -1.0 1.0 out-min out-max)]
+      (assoc c
+             :i-term i-term
+             :last-scaled-input scaled-input
+             :last-time-ms time-ms
+             :output output))
+    c))
