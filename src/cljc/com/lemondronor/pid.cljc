@@ -1,4 +1,5 @@
-(ns com.lemondronor.pid)
+(ns com.lemondronor.pid
+  (:refer-clojure :exclude [update]))
 
 
 (defn scale
