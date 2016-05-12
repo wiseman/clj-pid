@@ -62,17 +62,18 @@
     (let [{:keys [set-point kp kd ki i-term last-input bounds]} c
           [in-min in-max out-min out-max] bounds
           scaled-input (scale (clamp input in-min in-max) in-min in-max -1.0 1.0)
+          scaled-last-input (scale (clamp last-input in-min in-max) in-min in-max -1.0 1.0)
           sp (scale (clamp set-point in-min in-max) in-min in-max -1.0 1.0)
           error (- sp scaled-input)
           p-val (* kp error)
-          d-val (* kd (- last-input scaled-input))
+          d-val (* kd (- scaled-last-input scaled-input))
           i-term (clamp (+ i-term (* ki error)) -1.0 1.0)
           i-val i-term
           output (scale (clamp (+ p-val i-val d-val) -1.0 1.0)
                         -1.0 1.0 out-min out-max)]
       (assoc c
              :i-term i-term
-             :last-scaled-input scaled-input
+             :last-input input
              :last-time-ms time-ms
              :output output))
     c))

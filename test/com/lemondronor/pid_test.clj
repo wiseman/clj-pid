@@ -64,6 +64,27 @@
 
 
 (deftest pid-test
+  (testing "constructor and one update"
+    (let [pid (pid/pid
+               {:kp 0.1
+                :ki 1/30
+                :kd 1/200
+                :set-point 0
+                :bounds [-180 180 -1 1]
+                :sample-period-ms 1000})]
+      (is (= 0.1 (:kp pid)))
+      (is (a= 1/30 (:ki pid)))
+      (is (a= 1/200 (:kd pid)))
+      (is (= 0 (:set-point pid)))
+      (is (= [-180 180 -1 1] (:bounds pid)))
+      (is (= 1000 (:sample-period-ms pid)))
+      (is (= 0 (:i-term pid)))
+      (is (= 0 (:last-input pid)))
+      (is (= nil (:last-time-ms pid)))
+      (let [pid (pid/update pid 1000 180)]
+        (is (= 180 (:last-input pid)))
+        (is (= 1000 (:last-time-ms pid)))
+        (is (not (nil? (:output pid)))))))
   (testing "basic functionality"
     (loop [pid (pid/pid
                 {:kp 0.1
