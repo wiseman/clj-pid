@@ -51,7 +51,7 @@
   "Creates a PID controller."
   [c]
   (-> c
-      (assoc :i-term 0 :last-input 0 :last-time-ms nil)
+      (assoc :i-term 0 :last-input nil :last-time-ms nil)
       (set-coefficients (:kp c) (:ki c) (:kd c))))
 
 (defn update
@@ -62,11 +62,14 @@
     (let [{:keys [set-point kp kd ki i-term last-input bounds]} c
           [in-min in-max out-min out-max] bounds
           scaled-input (scale (clamp input in-min in-max) in-min in-max -1.0 1.0)
-          scaled-last-input (scale (clamp last-input in-min in-max) in-min in-max -1.0 1.0)
+
           sp (scale (clamp set-point in-min in-max) in-min in-max -1.0 1.0)
           error (- sp scaled-input)
           p-val (* kp error)
-          d-val (* kd (- scaled-last-input scaled-input))
+          d-val (if last-input
+                  (let [scaled-last-input (scale (clamp last-input in-min in-max) in-min in-max -1.0 1.0)]
+                    (* kd (- scaled-last-input scaled-input)))
+                  0)
           i-term (clamp (+ i-term (* ki error)) -1.0 1.0)
           i-val i-term
           output (scale (clamp (+ p-val i-val d-val) -1.0 1.0)

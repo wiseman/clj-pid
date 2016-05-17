@@ -79,7 +79,7 @@
       (is (= [-180 180 -1 1] (:bounds pid)))
       (is (= 1000 (:sample-period-ms pid)))
       (is (= 0 (:i-term pid)))
-      (is (= 0 (:last-input pid)))
+      (is (= nil (:last-input pid)))
       (is (= nil (:last-time-ms pid)))
       (let [pid (pid/update pid 1000 180)]
         (is (= 180 (:last-input pid)))
