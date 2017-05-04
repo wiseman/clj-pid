@@ -123,7 +123,7 @@ see it tilting back and forth, fighting the wind.
 
 ## License
 
-Copyright © 2016 John Wiseman jjwiseman@gmail.com
+Copyright © 2016, 2017 John Wiseman jjwiseman@gmail.com
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
