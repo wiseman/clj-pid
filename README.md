@@ -110,7 +110,7 @@ gnuplot> plot "wind.dat" using 1:2 with lines title "Setpoint (m)", '' using 1:3
 Here's the output. You can see the controller basically works, though
 the parameters could probably use some tuning.
 
-![Wind example chart](https://cdn.rawgit.com/wiseman/clj-pid/master/wind-example.svg?raw=true)
+![Wind example chart](https://cdn.rawgit.com/wiseman/clj-pid/master/wind-example.svg?raw=true&jjwcachebust=1)
 
 You can see that at time 5000 ms, the drone tilts forward as far as it
 can to achieve max acceleration toward the target position. At about
