@@ -121,12 +121,14 @@ too much.
 Once it settles at the target position, at roughly 9000 ms, you can
 see it tilting back and forth, fighting the wind.
 
+
 ## Real world example
 
 Here's a video showing the result of using this library to create 2
 PID controllers that were used to control a real drone:
 
 [![Wind example chart](https://cdn.rawgit.com/wiseman/clj-pid/master/video-thumbnail.jpg?raw=true)](https://www.youtube.com/watch?v=jpN-BhmvSi8)
+
 
 ## License
 
