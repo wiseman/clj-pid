@@ -21,7 +21,7 @@ http://brettbeauregard.com/blog/tag/beginners-pid/:
 The following example is a simulation of using a PID controller to
 hold position while the wind is trying to blow us around.
 
-You can imagine that we're trying to control a small quadrotor drone.
+You can imagine that we're trying to control a small multirotor drone.
 In this example, we'll use one PID controller that controls the
 drone's pitch--that is, tells it how much to tilt forward or backward.
 This will let it move in one axis.
@@ -32,10 +32,10 @@ then add a controller for altitude, and another for heading.)
 
 In the following simple model, we have
 
-* A drone that can tilt forward or backward. We assume the amount of
-  tilt is directly proportional to the drone's acceleration. Max
-  acceleration is 3 m/s. We use Euler integration to compute position
-  from acceleration.
+* A drone that can tilt forward or backward. We assume the drone's
+  acceleration is directly proportional to the amount of tilt, up to a
+  maximum acceleration of 3 m/s^2. We use Euler integration to compute
+  position from acceleration.
 
 * Wind, which starts with a velocity of 0 m/s and then is modeled by a
   random walk.
@@ -48,7 +48,7 @@ speed is 0, and the drone's target position is 0.
 
 At time 5000 ms, we change the drone's target position to be 50
 meters. At time 20000 ms, we change the drone's target position back
-to 0 meters.
+to 0 meters. At 30000 ms, the simulation ends.
 
 ```
 (require '[com.lemondronor.pid :as pid])
@@ -120,6 +120,13 @@ too much.
 
 Once it settles at the target position, at roughly 9000 ms, you can
 see it tilting back and forth, fighting the wind.
+
+## Real world example
+
+Here's a video showing the result of using this library to create 2
+PID controllers that were used to control a real drone:
+
+[![Wind example chart](https://cdn.rawgit.com/wiseman/clj-pid/master/video-thumbnail.jpg?raw=true)](https://www.youtube.com/watch?v=jpN-BhmvSi8)
 
 ## License
 
